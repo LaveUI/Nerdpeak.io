@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nerdpeak</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div class="bg-blue-600 p-4 shadow-md text-center font-bold text-white font-mono tracking-[0.5em] text-3xl">
+        <h1>NERDPEAK.io</h1>
+    </div>
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md align-center mx-auto mt-10">
+        <h2 class="text-2xl font-bold text-center text-blue-600 mb-4">Create an Account</h2>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="bg-{{ 'green' if category == 'success' else 'red' }}-500 text-white p-2 rounded-md text-center mb-4">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('auth.register') }}" class="space-y-4">
+            {{ form.hidden_tag() }}
+
+            <div>
+                <label class="block text-gray-700 font-medium">Name</label>
+                {{ form.name(class="w-full p-2 border rounded-md") }}
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium">Email</label>
+                {{ form.email(class="w-full p-2 border rounded-md") }}
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium">Password</label>
+                {{ form.password(class="w-full p-2 border rounded-md") }}
+            </div>
+
+            <div>
+                <label class="block text-gray-700 font-medium">Confirm Password</label>
+                {{ form.confirm_password(class="w-full p-2 border rounded-md") }}
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+                Register
+            </button>
+        </form>
+
+        <p class="text-center text-gray-600 mt-4">Already have an account? 
+            <a href="{{ url_for('auth.login') }}" class="text-blue-600 hover:underline">Login here</a>
+        </p>
+    </div>
+</body>
+</html>

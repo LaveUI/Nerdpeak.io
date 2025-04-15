@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Tracker Dashboard</title>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {},
+            },
+        };
+    </script>
+    <link rel="icon" href="{{ url_for('static', filename='images/nerdp.png') }}" type="image/png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <img src="{{ url_for('static', filename='nerd.png') }}" alt="Logo" class="h-10 w-10 rounded-full">
+                <a href="#" class="text-white text-2xl font-bold">NERDPEEK.io</a>
+            </div>
+            <ul class="hidden md:flex space-x-6 text-white">
+                <li><a href="#" class="hover:text-gray-300">Home</a></li>
+                <li><a href="#" class="hover:text-gray-300">About</a></li>
+            </ul>
+    
+            <!-- User Authentication Section -->
+            <div class="relative">
+                {% if 'user' in session %}
+                    <button id="user-menu-button" class="flex items-center space-x-2 bg-white text-blue-600 font-bold px-4 py-2 rounded-lg hover:bg-gray-200">
+                        <span>👤 {{ session['user'] }}</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+    
+                    <!-- Dropdown Menu -->
+                    <div id="user-dropdown" class="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md hidden">
+                        <a href="{{ url_for('auth.login') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Logout</a>
+                    </div>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="text-white font-semibold hover:text-gray-300 px-3">Login</a>
+                    <a href="{{ url_for('auth.register') }}" class="text-white font-semibold hover:text-gray-300 px-3">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-blue-500 text-white p-4">
+        <a href="#" class="block py-2">Home</a>
+        <a href="#" class="block py-2">About</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6">
+        <h1 class="font-bold text-blue-600 text-center text-3xl mb-4">DSA Tracker Dashboard</h1>
+
+        <form id="tracker-form" class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+            <input type="text" id="leetcode-username" class="w-full p-2 border rounded-md mb-2" placeholder="Enter LeetCode Username">
+            <input type="text" id="codeforces-username" class="w-full p-2 border rounded-md mb-2" placeholder="Enter Codeforces Username">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 w-full rounded-md" type="submit">Track</button>
+        </form>
+
+        <div id="stats-container" class="mt-6 text-center">
+            <h2 class="text-xl font-semibold">DSA Statistics</h2>
+            <div id="stats" class="p-4"></div>
+
+            <h2 class="text-xl font-semibold mt-6">Skills</h2>
+            <div id="skills-container" class="p-4"></div>
+
+            <h2 class="text-xl font-semibold mt-6">Performance Graphs</h2>
+            <canvas id="leetcode-chart" class="mt-4"></canvas>
+            <canvas id="codeforces-chart" class="mt-4"></canvas>
+        </div>
+
+        <!-- Upcoming Contests Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+            <h2 class="text-2xl font-semibold text-black mb-4 text-center italic font-bold">UPCOMING CONTESTS</h2>
+            <ul id="upcomingContests" class="space-y-3 text-center ">
+                <li class="text-gray-500">Loading upcoming contests...</li>
+            </ul>
+        </div>
+        
+
+    </div>
+
+    <script>
+        // Mobile Menu Toggle
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Close Mobile Menu on Link Click
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const userMenuButton = document.getElementById("user-menu-button");
+        const userDropdown = document.getElementById("user-dropdown");
+
+        if (userMenuButton) {
+            userMenuButton.addEventListener("click", function() {
+                userDropdown.classList.toggle("hidden");
+            });
+
+            // Hide dropdown when clicking outside
+            document.addEventListener("click", function(event) {
+                if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
+                    userDropdown.classList.add("hidden");
+                }
+            });
+        }
+    });
+</script>
+
+</html>
